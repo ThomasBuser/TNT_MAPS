@@ -20,8 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([
             ':userid' => $_SESSION['user_id'],
             ':name' => $name,
-            ':lon' => 150,
-            ':lat' => 150
+            ':lon' => $_POST['lon'],
+            ':lat' => $_POST['lat']
         ]);
         echo "Place added successfully.";
     } else {
@@ -41,7 +41,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <form method="post" action="">
         <label for="name">Place Name:</label>
         <input type="text" id="name" name="name" required>
+        <input type="hidden" id="lon" name="lon">
+        <input type="hidden" id="lat" name="lat">
         <button type="submit">Add Place</button>
     </form>
+    <script>
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                document.getElementById('lon').value = position.coords.longitude;
+                document.getElementById('lat').value = position.coords.latitude;
+            });
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    </script>
 </body>
 </html>
