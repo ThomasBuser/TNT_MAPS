@@ -24,7 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':lat' => $_POST['lat']
         ]);
         echo "Place added successfully.";
-    } else {
+        header('Location: index.html');
+        exit;} else {
         echo "Name cannot be empty.";
     }
 }
@@ -43,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="text" id="name" name="name" required>
         <input type="hidden" id="lon" name="lon">
         <input type="hidden" id="lat" name="lat">
-        <button type="submit">Add Place</button>
+        <button type="submit" onclick="window.location.href='../'">Add Place</button>
     </form>
     <script>
         if (navigator.geolocation) {
