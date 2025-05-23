@@ -59,17 +59,36 @@ input {
   border-radius: 4px;
 }
 
+/* Flex Layouts */
+.center-vertical {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+.center-horizontal {
+  display: flex;
+  justify-content: center;
+}
+.center-horizontal-vertical {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
 /* Grid Layouts */
 .grid-1-row {
   display: grid;
   grid-template-rows: 1fr;
-  gap: 1rem;
+
 }
 
 .grid-2-row {
   display: grid;
   grid-template-rows: repeat(2, 1fr);
   gap: 1rem;
+
 }
 
 .grid-3-row {
