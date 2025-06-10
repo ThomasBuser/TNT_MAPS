@@ -6,6 +6,10 @@
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/template.css" />
     <style>
+      /* -------------------------------------------------- */
+      /*   LOKALE OVERRIDES                                */
+      /* -------------------------------------------------- */
+
       .reise-steuerung {
         display: flex;
         flex-direction: column;
@@ -30,6 +34,55 @@
         display: flex;
         justify-content: center;
       }
+
+      /* -----------------------------
+         Neuer weisser Bereich unterhalb der Karte
+         ----------------------------- */
+      #placesWrapper {
+        width: 100%;                /* nimmt die volle Seitenbreite ein */
+        background-color: #ffffff;  /* weisser Hintergrund */
+        padding: 20px;
+        box-sizing: border-box;     /* Padding in Breite einrechnen */
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+        margin-top: -5px;           /* damit es bündig zur Karte anliegt */
+      }
+
+      /* Entfernt den hellgrauen Strich */
+      #placesWrapper::before {
+        display: none;
+      }
+
+      /* Dunkelgrüner Button „Neuen Standort hinzufügen“ */
+      #placesWrapper > .center-horizontal > button:first-child {
+        background-color: #355e3b !important;
+        color: white !important;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+      #placesWrapper > .center-horizontal > button:first-child:hover {
+        background-color: #2e5033 !important;
+      }
+
+      /* Schwarzer Logout-Button */
+      #placesWrapper > .center-horizontal > button#logoutBtn {
+        background-color: black !important;
+        color: white !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      }
+      #placesWrapper > .center-horizontal > button#logoutBtn:hover {
+        background-color: #222 !important;
+      }
+
+      /* Orts-Buttons schmaler und minimaler Abstand */
+      .place-button {
+        width: 100%;
+        max-width: 220px;
+        margin: 0.1px auto;
+        position: static;
+        left: auto;
+        transform: none;
+      }
     </style>
   </head>
   <body>
@@ -50,36 +103,45 @@
       />
 
       <label>Wähle Reisemodus:</label>
-<div class="reise-buttons">
-  <button onclick="setTravelMode('DRIVING')">&#x1F68D; Auto</button>     <!-- 🚍 -->
-  <button onclick="setTravelMode('WALKING')">&#x1F6B6; Laufen</button>   <!-- 🚶 -->
-  <button onclick="setTravelMode('TRANSIT')">&#x1F686; ÖV</button>  <!-- 🚆 -->
-</div>
-
+      <div class="reise-buttons">
+        <button onclick="setTravelMode('DRIVING')">&#x1F68D; Auto</button>
+        <button onclick="setTravelMode('WALKING')">&#x1F6B6; Laufen</button>
+        <button onclick="setTravelMode('TRANSIT')">&#x1F686; ÖV</button>
+      </div>
     </div>
 
     <div id="map"></div>
 
-  <!-- Buttons: Standort hinzufügen & löschen -->
-<div class="center-horizontal" style="margin-top: 15px; gap: 10px;">
-  <button onclick="window.location.href='add.php'">&#x2795; Neuen Standort hinzufügen</button>
-  <button class="delete-button" onclick="alert('Löschfunktion noch nicht implementiert')">&#x1F5D1; Standort löschen</button>
-</div>
+    <!-- Weiss hinterlegter Bereich -->
+    <div id="placesWrapper">
+      <!-- Buttons: Standort hinzufügen & löschen -->
+      <div class="center-horizontal" style="margin-bottom: 15px; gap: 10px;">
+        <button onclick="window.location.href='add.php'">
+          &#x2795; Neuen Standort hinzufügen
+        </button>
+        <button
+          class="delete-button"
+          onclick="alert('Löschfunktion noch nicht implementiert')"
+        >
+          &#x1F5D1; Standort löschen
+        </button>
+      </div>
 
+      <!-- Ausgabe der gespeicherten Orte -->
+      <div id="placesSection" style="text-align: center; margin: 20px 0;"></div>
 
-    <!-- Ausgabe der gespeicherten Orte -->
-    <div id="placesSection" style="text-align: center; margin: 20px 0;"></div>
-
-    <!-- Logout-Button -->
-    <div class="center-horizontal" style="margin-top: 10px;">
-      <button id="logoutBtn">Logout</button>
+      <!-- Logout-Button -->
+      <div class="center-horizontal" style="margin-top: 10px;">
+        <button id="logoutBtn">Logout</button>
+      </div>
     </div>
 
     <script src="js/protected.js"></script>
     <script src="js/logout.js"></script>
-    <script async
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCN_ar1_LBpD9XIo20iM2w3JOLv6X7olG0&libraries=places&callback=initMap">
-    </script>
+    <script
+      async
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCN_ar1_LBpD9XIo20iM2w3JOLv6X7olG0&libraries=places&callback=initMap"
+    ></script>
 
     <script>
       function initMap() {
