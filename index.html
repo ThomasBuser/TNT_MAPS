@@ -50,19 +50,20 @@
       />
 
       <label>Wähle Reisemodus:</label>
-      <div class="reise-buttons">
-        <button onclick="setTravelMode('DRIVING')">Auto</button>
-        <button onclick="setTravelMode('WALKING')">Laufen</button>
-        <button onclick="setTravelMode('TRANSIT')">Transit</button>
-      </div>
+<div class="reise-buttons">
+  <button onclick="setTravelMode('DRIVING')">&#x1F68D; Auto</button>     <!-- 🚍 -->
+  <button onclick="setTravelMode('WALKING')">&#x1F6B6; Laufen</button>   <!-- 🚶 -->
+  <button onclick="setTravelMode('TRANSIT')">&#x1F686; ÖV</button>  <!-- 🚆 -->
+</div>
+
     </div>
 
     <div id="map"></div>
 
   <!-- Buttons: Standort hinzufügen & löschen -->
 <div class="center-horizontal" style="margin-top: 15px; gap: 10px;">
-  <button onclick="window.location.href='add.php'">Neuen Standort hinzufügen</button>
-  <button class="delete-button" onclick="alert('Löschfunktion noch nicht implementiert')">Standort löschen</button>
+  <button onclick="window.location.href='add.php'">&#x2795; Neuen Standort hinzufügen</button>
+  <button class="delete-button" onclick="alert('Löschfunktion noch nicht implementiert')">&#x1F5D1; Standort löschen</button>
 </div>
 
 
