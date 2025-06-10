@@ -21,10 +21,15 @@ async function checkAuth() {
     // Orte unten einfügen
     const placesSection = document.getElementById("placesSection");
     if (result.names && result.names.length > 0) {
-      placesSection.innerHTML = `<p>Orte: ${result.names.join(", ")}</p>`;
-    } else {
-      placesSection.innerHTML = `<p>Keine gespeicherten Orte.</p>`;
-    }
+  // Erstelle Buttons für jeden Ort
+  const buttonsHtml = result.names.map(name => 
+    `<button class="place-button">${name}</button>`
+  ).join("<br>");
+  placesSection.innerHTML = buttonsHtml;
+} else {
+  placesSection.innerHTML = "";
+}
+
 
     return true;
   } catch (error) {
