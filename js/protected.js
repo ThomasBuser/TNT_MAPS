@@ -11,13 +11,20 @@ async function checkAuth() {
 
     const result = await response.json();
 
-    // Display user data in the protected content div
+    // Begrüssung + Benutzer-ID
     const protectedContent = document.getElementById("protectedContent");
     protectedContent.innerHTML = `
-      <h2>Welcome, ${result.email}!</h2>
-      <p>Your user ID is: ${result.user_id}</p>
-      <p>Places: ${result.names}</p>
+      <h2>Willkommen, ${result.email}!</h2>
+      <p>Deine Benutzer-ID ist: ${result.user_id}</p>
     `;
+
+    // Orte unten einfügen
+    const placesSection = document.getElementById("placesSection");
+    if (result.names && result.names.length > 0) {
+      placesSection.innerHTML = `<p>Orte: ${result.names.join(", ")}</p>`;
+    } else {
+      placesSection.innerHTML = `<p>Keine gespeicherten Orte.</p>`;
+    }
 
     return true;
   } catch (error) {
@@ -27,5 +34,4 @@ async function checkAuth() {
   }
 }
 
-// Check auth when page loads
 window.addEventListener("load", checkAuth);

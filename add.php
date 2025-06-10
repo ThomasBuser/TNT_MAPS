@@ -1,5 +1,3 @@
-
-
 <?php
 session_start();
 require_once 'system/config.php';
@@ -25,36 +23,66 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
         echo "Place added successfully.";
         header('Location: index.html');
-        exit;} else {
+        exit;
+    } else {
         echo "Name cannot be empty.";
     }
 }
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Add New Place</title>
+    <title>Neuen Standort hinzufügen</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <h1>Add a New Place</h1>
-    <form method="post" action="">
-        <label for="name">Place Name:</label>
-        <input type="text" id="name" name="name" required>
-        <input type="hidden" id="lon" name="lon">
-        <input type="hidden" id="lat" name="lat">
-        <button type="submit" onclick="window.location.href='../'">Add Place</button>
-    </form>
+    <div class="overlay">
+        <form method="post" action="">
+            <h2>Neuen Standort hinzufügen</h2>
+
+            <div class="form-group">
+                <label for="name">Name des Ortes:</label>
+                <input type="text" id="name" name="name" placeholder="Beispiel: Restaurant Wieder" required>
+            </div>
+
+            <div class="form-group">
+                <label for="pac-input">Standort:</label>
+                <input type="text" id="pac-input" placeholder="z. B. Restaurant">
+            </div>
+
+            <input type="hidden" id="lon" name="lon">
+            <input type="hidden" id="lat" name="lat">
+
+            <button type="submit">Hinzufügen</button>
+        </form>
+    </div>
+
+    <div id="map"></div>
+
     <script>
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position) {
                 document.getElementById('lon').value = position.coords.longitude;
                 document.getElementById('lat').value = position.coords.latitude;
             });
-        } else {
-            alert("Geolocation is not supported by this browser.");
         }
+
+        function initMap() {
+            const map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: 47.2, lng: 8.8 }, // Beispielkoordinaten
+                zoom: 16,
+                disableDefaultUI: true
+            });
+
+            const input = document.getElementById("pac-input");
+            const autocomplete = new google.maps.places.Autocomplete(input);
+            autocomplete.bindTo("bounds", map);
+        }
+    </script>
+    <script async
+        src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initMap">
     </script>
 </body>
 </html>

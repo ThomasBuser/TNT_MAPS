@@ -1,38 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
   <head>
     <meta charset="UTF-8" />
-    <title>Protected Page</title>
+    <title>Geschützte Seite</title>
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/template.css" />
+    <style>
+      .reise-steuerung {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 15px;
+        gap: 10px;
+      }
+
+      .reise-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+      }
+
+      #map {
+        width: 100%;
+        height: 400px;
+        margin-top: 15px;
+      }
+
+      .center-horizontal {
+        display: flex;
+        justify-content: center;
+      }
+    </style>
   </head>
   <body>
-    <h1>Protected Page</h1>
+    <h1>Geschützte Seite</h1>
 
-    <!-- This is where we'll dynamically show the protected content -->
-    <div id="protectedContent"></div>
-    <h2>Your Current Location</h2>
-    <input id="pac-input" class="controls" type="text" placeholder="Search for places" style="margin-bottom: 10px; width: 100%; padding: 8px;" />
-    <div style="margin-bottom: 10px;">
-      <label>Select travel mode: </label>
-      <button onclick="setTravelMode('DRIVING')">Car</button>
-      <button onclick="setTravelMode('WALKING')">Walk</button>
-      <button onclick="setTravelMode('TRANSIT')">Transit</button>
-      <button onclick="window.location.href='add.php'">Add Locations</button>
+    <!-- Begrüssung und User-ID -->
+    <div id="protectedContent" style="text-align: center; margin-bottom: 20px;"></div>
+
+    <h2>Dein aktueller Standort</h2>
+
+    <div class="reise-steuerung">
+      <input
+        id="pac-input"
+        class="controls"
+        type="text"
+        placeholder="Suche nach Orten"
+        style="padding: 8px; width: 300px"
+      />
+
+      <label>Wähle Reisemodus:</label>
+      <div class="reise-buttons">
+        <button onclick="setTravelMode('DRIVING')">Auto</button>
+        <button onclick="setTravelMode('WALKING')">Laufen</button>
+        <button onclick="setTravelMode('TRANSIT')">Transit</button>
+      </div>
     </div>
-    <div id="map" style="width: 100%; height: 400px;"></div>
-   
+
+    <div id="map"></div>
+
+    <!-- Button: Neuen Standort hinzufügen -->
+    <div class="center-horizontal" style="margin-top: 15px;">
+      <button onclick="window.location.href='add.php'">Neuen Standort hinzufügen</button>
+    </div>
+
+    <!-- Ausgabe der gespeicherten Orte -->
+    <div id="placesSection" style="text-align: center; margin: 20px 0;"></div>
+
+    <!-- Logout-Button -->
+    <div class="center-horizontal" style="margin-top: 10px;">
+      <button id="logoutBtn">Logout</button>
+    </div>
+
+    <script src="js/protected.js"></script>
+    <script src="js/logout.js"></script>
+    <script async
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCN_ar1_LBpD9XIo20iM2w3JOLv6X7olG0&libraries=places&callback=initMap">
+    </script>
+
     <script>
       function initMap() {
         const map = new google.maps.Map(document.getElementById("map"), {
           zoom: 13,
-          center: { lat: 46.9479739, lng: 7.4474468 }, // Default center
+          center: { lat: 46.9479739, lng: 7.4474468 },
         });
 
         const input = document.getElementById("pac-input");
         const autocomplete = new google.maps.places.Autocomplete(input);
         autocomplete.bindTo("bounds", map);
-        autocomplete.setTypes(['establishment']); // Limit suggestions to businesses/restaurants
+        autocomplete.setTypes(["establishment"]);
 
         const marker = new google.maps.Marker({
           map: map,
@@ -46,9 +102,9 @@
         let currentLocation = null;
         let travelMode = google.maps.TravelMode.DRIVING;
 
-        window.setTravelMode = function(mode) {
+        window.setTravelMode = function (mode) {
           travelMode = google.maps.TravelMode[mode];
-        }
+        };
 
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
@@ -62,7 +118,7 @@
               marker.setVisible(true);
             },
             function () {
-              alert("Geolocation failed or was denied.");
+              alert("Geolocation fehlgeschlagen oder wurde verweigert.");
             }
           );
         }
@@ -71,7 +127,7 @@
           marker.setVisible(false);
           const place = autocomplete.getPlace();
           if (!place.geometry) {
-            alert("No details available for input: '" + place.name + "'");
+            alert("Keine Details verfügbar für Eingabe: '" + place.name + "'");
             return;
           }
 
@@ -96,23 +152,15 @@
                 if (status === "OK") {
                   directionsRenderer.setDirections(response);
                 } else {
-                  alert("Directions request failed due to " + status);
+                  alert("Routenanfrage fehlgeschlagen: " + status);
                 }
               }
             );
           } else {
-            alert("Current location not available.");
+            alert("Aktueller Standort nicht verfügbar.");
           }
         });
       }
-    </script>
-
-    <button id="logoutBtn">Logout</button>
-
-    <script src="js/protected.js"></script>
-    <script src="js/logout.js"></script>
-    <script async
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCN_ar1_LBpD9XIo20iM2w3JOLv6X7olG0&libraries=places&callback=initMap">
     </script>
   </body>
 </html>
