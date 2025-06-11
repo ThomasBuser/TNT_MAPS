@@ -37,7 +37,7 @@ label {
 }
 
 input[type="email"],
-input[type="password"]
+input[type="password"],
 input[type="text"] {
   width: 100%;
   padding: 0.5rem;
@@ -97,6 +97,7 @@ a {
   text-align: center;
   font-size: 0.9rem;
 }
+
 /* --- ADD.PHP PAGE STYLING --- */
 
 #map {
@@ -179,6 +180,22 @@ a {
   background-color: #a93226;
 }
 
+/* Grüner Button „Neuen Standort hinzufügen“ mit abgerundeten Ecken */
+#placesWrapper > .center-horizontal > button:first-child {
+  background-color: #355e3b !important;
+  color: white !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 25px;          /* abgerundete Ecken */
+  padding: 0.7rem;              /* gleiche Polsterung wie roter Button */
+  font-weight: bold;            /* gleiche Schriftstärke */
+  cursor: pointer;              /* Zeiger-Cursor */
+  transition: background 0.3s ease;
+}
+
+#placesWrapper > .center-horizontal > button:first-child:hover {
+  background-color: #2e5033 !important;
+}
+
 .place-button {
   background-color: #ffd700;
   color: black;
@@ -197,16 +214,13 @@ a {
   width: 300%;
   max-width: none;
   margin: 1px 0;
-  
+
   position: relative;
   left: 50%;
   transform: translateX(-50%);
 
   text-align: center;
 }
-
-
-
 
 .place-button:hover {
   background-color: #e6c200;
@@ -220,4 +234,13 @@ a {
   box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
   margin-top: -5px; /* damit es direkt an die Karte anschliesst */
 }
- 
+
+/* Reset für inputs mit fehlendem Komma korrigiert */
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
