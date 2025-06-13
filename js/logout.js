@@ -13,7 +13,7 @@ document.getElementById("logoutBtn").addEventListener("click", async (e) => {
 
     if (result.status === "success") {
       // Redirect to login page after successful logout
-      window.location.href = "login.html";
+      window.location.href = "/login/";
     } else {
       console.error("Logout failed");
       alert("Logout failed. Please try again.");

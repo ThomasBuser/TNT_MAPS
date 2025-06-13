@@ -47,9 +47,6 @@ a {
   display: none;
 }
 
-.mobile-hidden {
-  display: block;
-}
 /* Buttons */
 button {
   padding: 0.5rem 1rem;
@@ -136,10 +133,5 @@ input {
     grid-template-columns: 1fr;
   }
 
-  .desktop-hidden {
-    display: none;
-  }
-  .mobile-hidden {
-    display: block;
-  }
+
 }

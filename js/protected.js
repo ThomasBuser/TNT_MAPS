@@ -15,7 +15,6 @@ async function checkAuth() {
     const protectedContent = document.getElementById("protectedContent");
     protectedContent.innerHTML = `
       <p>Hallo, ${result.email}</p></h2>
-      <!--<p>Deine Benutzer-ID ist: ${result.user_id}</p>-->
     `;
 
     // Orte unten einfügen & löschen
@@ -58,11 +57,33 @@ async function checkAuth() {
       // Add global delete trigger for .initial-delete-button
       const globalDeleteTrigger = document.querySelector('.initial-delete-button');
       if (globalDeleteTrigger) {
+        let deleteMode = false;
+
         globalDeleteTrigger.addEventListener('click', () => {
+          deleteMode = !deleteMode;
+
           document.querySelectorAll('.delete-button').forEach(button => {
-            button.classList.remove('hidden');
-            button.style.setProperty('display', 'block', 'important');
+            if (deleteMode) {
+              button.classList.remove('hidden');
+              button.style.setProperty('display', 'block', 'important');
+            } else {
+              button.classList.add('hidden');
+              button.style.removeProperty('display');
+            }
           });
+
+          // Place-button width logic for delete mode and mobile
+          document.querySelectorAll('.place-button').forEach(button => {
+            if (deleteMode) {
+              if (window.innerWidth <= 768) {
+                button.style.setProperty('width', '45vw', 'important');
+              }
+            } else {
+              button.style.removeProperty('width');
+            }
+          });
+
+          globalDeleteTrigger.innerHTML = deleteMode ? 'Abbrechen' : '<i class="material-icons">delete</i> Löschen';
         });
       }
 

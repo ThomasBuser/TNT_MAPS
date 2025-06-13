@@ -5,27 +5,45 @@
     <title>Register</title>
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/template.css" />
+    <link rel="stylesheet" href="../css/register-login.css">
+    <link rel="icon" type="image/png" href="../assets/img/favicon.ico">
   </head>
   <body>
-    <h1>Register</h1>
-
-    <form id="registerForm">
-      <div>
-        <label>Name</label>
-        <input type="text" id="lastname" required />
+    <header>
+      <div class="header-content">
+        <img class="logo" src="../assets/img/logo_tnt.webp" alt="TNT Logo">
+        <div class="center-verical text-white" id="protectedContent" style="text-align: left;"></div>
       </div>
-      <div>
-        <label>Email</label>
-        <input type="email" id="email" required />
+    </header>
+    <main>
+      <h1>Register</h1>
+      <form id="registerForm">
+        <div>
+          <label>Name</label>
+          <input type="text" id="lastname" required />
+        </div>
+        <div>
+          <label>Email</label>
+          <input type="email" id="email" required />
+        </div>
+        <div>
+          <label>Passwort</label>
+          <input type="password" id="password" required />
+        </div>
+        <div>
+          <label>Passwort wiederholen</label>
+          <input type="password" id="confirmPassword" required />
+        </div>
+        <div class="center-horizontal"><button type="submit">Register</button></div>
+      </form>
+      <p>Haben Sie schon einen Account? <a href="../login/">Hier Einloggen</a>.</p>
+    </main>
+    <footer>
+      <div class="footer-content">
+        <p class="text-white">Falls Sie Hilfe benötigen beim Registrieren: <a href="tel:+41791234567" class="text-white">+41 79 123 45 67</a></p>
+        <p class="text-white" style="margin: 0;">© 2025 TNT Maps. Alle Rechte vorbehalten.</p>
       </div>
-      <div>
-        <label>Password</label>
-        <input type="password" id="password" required />
-      </div>
-      <button type="submit">Register</button>
-    </form>
-
-    <p>Already have an account? <a href="../login/">Login here</a>.</p>
+    </footer>
 
     <script src="../js/register.js"></script>
   </body>

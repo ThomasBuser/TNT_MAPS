@@ -2,122 +2,107 @@
 <html lang="de">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
+  <meta charset="UTF-8">
   <title>TNT Maps</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="stylesheet" href="css/template.css" />
-  <link rel="stylesheet" href="css/var.css" />
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/template.css">
+  <link rel="stylesheet" href="css/var.css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/png" href="assets/img/favicon.ico">
-  <style>
-    /* -------------------------------------------------- */
-    /*   LOKALE OVERRIDES                                */
-    /* -------------------------------------------------- */
-
-    .reise-steuerung {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 15px;
-      gap: 10px;
-    }
-
-    .reise-buttons {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-    }
-
-
-    .center-horizontal {
-      display: flex;
-      justify-content: center;
-    }
-
-    /* -----------------------------
-         Neuer weisser Bereich unterhalb der Karte
-         ----------------------------- */
-    #placesWrapper {
-      width: 100%;
-      /* nimmt die volle Seitenbreite ein */
-      background-color: #ffffff;
-      /* weisser Hintergrund */
-      padding: 20px;
-      box-sizing: border-box;
-      /* Padding in Breite einrechnen */
-      border-top-left-radius: 20px;
-      border-top-right-radius: 20px;
-      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
-      margin-top: -5px;
-      /* damit es bündig zur Karte anliegt */
-    }
-
-    /* Entfernt den hellgrauen Strich */
-    #placesWrapper::before {
-      display: none;
-    }
-
-    /* Schwarzer Logout-Button */
-    #placesWrapper>.center-horizontal>button#logoutBtn {
-      background-color: black !important;
-      color: white !important;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    }
-
-  </style>
 </head>
 
 <body>
   <h1 class="hidden">TNT Maps</h1>
 
   <!-- Begrüssung und User-ID -->
-
   <header>
     <div class="header-content">
-      <img class="logo" src="assets/img/logo_tnt.png" alt="TNT Logo" class="logo" />
+      <img class="logo" src="assets/img/logo_tnt.webp" alt="TNT Logo">
       <div class="center-verical text-white" id="protectedContent" style="text-align: left;"></div>
     </div>
   </header>
 
   <main style="width: 100vw; height: 90vh;">
     <div class="reise-steuerung">
-      <input id="pac-input" class="controls" type="text" placeholder="Wo möchten sie hin" />
+      <input id="pac-input" class="controls search-input" type="text" placeholder="Wo möchten sie hin">
       <div class="reise-buttons">
-        <button onclick="setTravelMode('DRIVING')"><i class="material-icons">directions_car</i> Auto</button>
-        <button onclick="setTravelMode('WALKING')"><i class="material-icons">directions_walk</i> Laufen</button>
-        <button onclick="setTravelMode('TRANSIT')"><i class="material-icons">directions_bus</i> ÖV</button>
+        <button class="button-flex" onclick="setTravelMode('DRIVING')"><i class="material-icons">directions_car</i>
+          Auto</button>
+        <button class="button-flex" onclick="setTravelMode('WALKING')"><i class="material-icons">directions_walk</i>
+          Laufen</button>
+        <button class="button-flex" onclick="setTravelMode('TRANSIT')"><i class="material-icons">directions_bus</i>
+          ÖV</button>
       </div>
     </div>
     <div id="map"></div>
+
     <!-- Weiss hinterlegter Bereich -->
-    <div id="placesWrapper">
-      <!-- Buttons: Standort hinzufügen & löschen -->
-      <div class="center-horizontal" style="margin-bottom: 15px; gap: 10px;">
-        <button class="bg-green-dark text-black" onclick="window.location.href='/add/'">
+     <!--Gespeicherte Standorte-->
+    <section class="saved-loctaions">
+      <div id="placesWrapper">
+        <!-- Buttons: Standort hinzufügen & löschen -->
+        <div class="center-horizontal" style="margin-bottom: 15px; gap: 10px;">
+          <button class="button-flex bg-green-dark text-black" onclick="openAddLocationModal()">
             <i class="material-icons">add</i> Standort hinzufügen
-        </button>
-        <button class="initial-delete-button bg-red text-white">
+          </button>
+          <button class="button-flex initial-delete-button bg-red text-white">
             <i class="material-icons">delete</i> Standort löschen
-        </button>
+          </button>
+        </div>
+        <!-- Ausgabe der gespeicherten Orte -->
+        <div id="placesSection" style="text-align: center; margin: 20px 0;"></div>
       </div>
-      <!-- Ausgabe der gespeicherten Orte -->
-      <div id="placesSection" style="text-align: center; margin: 20px 0;"></div>
-      <!-- Logout-Button -->
-      <div>
-        <button class="bg-black text-white" id="logoutBtn">Logout</button>
+    </section>
+
+
+    <!-- Add Location Modal -->
+    <div id="addLocationModal" class="modal-overlay">
+      <div class="modal-content">
+        <button class="modal-close" onclick="closeAddLocationModal()">
+          <i class="material-icons">close</i>
+        </button>
+
+        <form id="addLocationForm" class="modal-form">
+          <h2>Neuen Standort hinzufügen</h2>
+
+          <div class="modal-form-group">
+            <label for="locationName">Name des Ortes:</label>
+            <input type="text" id="locationName" name="name" placeholder="Beispiel: Restaurant Wieder" required>
+          </div>
+
+          <div class="modal-form-group">
+            <label for="locationSearch">Standort:</label>
+            <input type="text" id="locationSearch" name="location" placeholder="z. B. Restaurant">
+          </div>
+
+          <input type="hidden" id="locationLon" name="lon">
+          <input type="hidden" id="locationLat" name="lat">
+
+
+
+          <button type="submit">Hinzufügen</button>
+        </form>
       </div>
     </div>
   </main>
+  <footer style="display: none;">
+    <div class="footer-content">
+      <div class="mobile-logout">
+        <a href="#" id="logoutBtn" class="text-white" onclick="logout(); return false;">Ausloggen</a>
+      </div>
+      <p class="text-white mobile-hidden">Falls Sie Hilfe benötigen: <a href="tel:+41791234567" class="text-white"><b>+41 79 123 45 67</b></a></p>
+      <p class="text-white" style="margin: 0;">© 2025 TNT Maps. Alle Rechte vorbehalten.</p>
+    </div>
+  </footer>
 
   <script src="js/protected.js"></script>
   <script src="js/logout.js"></script>
   <script src="js/maps.js"></script>
-  <script async
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCN_ar1_LBpD9XIo20iM2w3JOLv6X7olG0&libraries=places&callback=initMap&language=de"></script>
+  <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCN_ar1_LBpD9XIo20iM2w3JOLv6X7olG0&libraries=places&callback=initMap&language=de"></script>
+  <script src="js/add.js"></script>
+  <script src="js/footerScroll.js"></script>
+  </script>
 
 </body>
 

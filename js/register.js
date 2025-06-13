@@ -8,6 +8,13 @@ document
     const password = document.getElementById("password").value.trim();
     const lastname = document.getElementById("lastname").value.trim();
 
+    const confirmPassword = document.getElementById("confirmPassword").value.trim();
+
+    if (password !== confirmPassword) {
+      alert("Die Passwörter stimmen nicht überein.");
+      return;
+    }
+
     try {
       const response = await fetch("../api/register.php", {
         method: "POST",

@@ -1,4 +1,16 @@
-function initMap() {
+// Define initMap in the global scope immediately
+window.initMap = function() {
+    // Reset key location/navigation state on each map initialization
+    window.currentLocation = null;
+    window.locationDetected = false;
+    window.previousLocation = null;
+    if (window.watchId) {
+        navigator.geolocation.clearWatch(window.watchId);
+        window.watchId = null;
+    }
+    // Show loading popup immediately
+    showLocationDetectionPopup();
+    
     window.map = new google.maps.Map(document.getElementById("map"), {
         zoom: 13,
         center: { lat: 46.9479739, lng: 7.4474468 }, // Default center (Bern, Switzerland)
@@ -9,7 +21,7 @@ function initMap() {
     autocomplete.bindTo("bounds", window.map);
     autocomplete.setTypes(["establishment"]);
 
-    // Create a blue dot for current location
+    // Create a blue dot for current location (default state)
     window.marker = new google.maps.Marker({
         map: window.map,
         icon: {
@@ -42,7 +54,7 @@ function initMap() {
     window.directionsRenderer = new google.maps.DirectionsRenderer({
         suppressMarkers: false, // Changed to false to show start/end markers
         suppressInfoWindows: true,
-        preserveViewport: false,
+        preserveViewport: true, // Changed to true to prevent auto-zoom
         markerOptions: {
             visible: false // We'll use our custom markers instead
         }
@@ -57,19 +69,46 @@ function initMap() {
     window.routeSteps = [];
     window.currentStepIndex = 0;
     window.watchId = null;
+    window.locationDetected = false;
+    window.currentHeading = 0; // Store current heading/bearing
+    window.previousLocation = null; // Store previous location for bearing calculation
 
     // Create navigation panel
     createNavigationPanel();
 
-    // Initialize geolocation with improved error handling
-    initGeolocation();
+    // Wait for map to be fully loaded before starting geolocation
+    google.maps.event.addListenerOnce(window.map, 'idle', function() {
+        console.log("Map is fully loaded, starting geolocation...");
+        // Add a small delay to ensure everything is ready
+        setTimeout(() => {
+            initGeolocation();
+        }, 500);
+    });
 
     window.setTravelMode = function(mode) {
         window.travelMode = google.maps.TravelMode[mode];
 
-        if (mode === "DRIVING" && window.currentLocation && window.destination) {
+        if (mode === "DRIVING") {
+            // Check if location detection is still in progress
+            if (!window.locationDetected) {
+                alert("Standortermittlung läuft noch. Bitte warten Sie, bis Ihr Standort gefunden wurde.");
+                return;
+            }
+            
+            if (!window.currentLocation) {
+                alert("Aktueller Standort nicht verfügbar. Bitte warten Sie, bis Ihr Standort ermittelt wurde, oder versuchen Sie die Seite neu zu laden.");
+                return;
+            }
+            
+            if (!window.destination) {
+                alert("Bitte wählen Sie zuerst ein Ziel aus.");
+                return;
+            }
+            
+            // Start navigation mode
             startNavigation();
         } else {
+            // For other modes (walking, transit), just update the route
             stopNavigation();
             if (window.currentLocation && window.destination) {
                 calculateAndDisplayRoute(window.currentLocation, window.destination);
@@ -77,26 +116,72 @@ function initMap() {
         }
     };
 
+    function createNavigationArrow(rotation = 0) {
+        return {
+            path: 'M 0,-8 L -4,8 L 0,4 L 4,8 Z',
+            fillColor: '#4285F4',
+            fillOpacity: 1,
+            strokeWeight: 2,
+            strokeColor: '#FFFFFF',
+            scale: 2,
+            rotation: rotation,
+            anchor: new google.maps.Point(0, 0)
+        };
+    }
+
+    function updateMarkerIcon(isNavigating) {
+        if (isNavigating) {
+            // Switch to arrow icon
+            window.marker.setIcon(createNavigationArrow(window.currentHeading));
+        } else {
+            // Switch back to blue dot
+            window.marker.setIcon({
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 8,
+                fillColor: '#4285F4',
+                fillOpacity: 1,
+                strokeWeight: 2,
+                strokeColor: '#FFFFFF'
+            });
+        }
+    }
+
+    function calculateBearing(from, to) {
+        const lat1 = from.lat * Math.PI / 180;
+        const lat2 = to.lat * Math.PI / 180;
+        const deltaLng = (to.lng - from.lng) * Math.PI / 180;
+
+        const x = Math.sin(deltaLng) * Math.cos(lat2);
+        const y = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(deltaLng);
+
+        const bearing = Math.atan2(x, y);
+        return (bearing * 180 / Math.PI + 360) % 360;
+    }
+
     function startNavigation() {
         window.navigationActive = true;
         
-        // Zoom to navigation view
-        window.map.setZoom(18);
-        window.map.setCenter(window.currentLocation);
-        window.map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
-        window.map.setTilt(45);
+        console.log("Starting navigation, current location:", window.currentLocation);
         
-        // Show navigation panel
+        // Show navigation panel first
         document.getElementById('navigationPanel').style.display = 'block';
         
-        // Calculate route and start navigation
+        // Set navigation map properties
+        window.map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
+        
+        // Switch to arrow icon
+        updateMarkerIcon(true);
+        
+        // Calculate route first, then zoom will be applied in the callback
         calculateAndDisplayRoute(window.currentLocation, window.destination, true);
         
         // Start high-frequency position tracking for navigation
         startNavigationTracking();
+        
+        console.log("Navigation started - zoom will be applied after route calculation");
     }
 
-    function stopNavigation() {
+    window.stopNavigation = function() {
         window.navigationActive = false;
         window.currentStepIndex = 0;
         
@@ -113,11 +198,14 @@ function initMap() {
         window.map.setZoom(13);
         window.map.setTilt(0);
         
+        // Switch back to blue dot
+        updateMarkerIcon(false);
+        
         // Keep destination marker visible after stopping navigation
         if (window.destination) {
             window.destinationMarker.setVisible(true);
         }
-    }
+    };
 
     function createNavigationPanel() {
         const navPanel = document.createElement('div');
@@ -139,7 +227,7 @@ function initMap() {
         navPanel.innerHTML = `
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                 <h3 style="margin: 0; color: #1976D2;">Navigation</h3>
-                <button onclick="stopNavigation()" style="background: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Stop</button>
+                <button onclick="window.stopNavigation()" style="background: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Stop</button>
             </div>
             <div id="currentInstruction" style="font-size: 16px; font-weight: bold; margin-bottom: 10px; color: #333;"></div>
             <div id="nextInstruction" style="font-size: 14px; color: #666; margin-bottom: 10px;"></div>
@@ -178,6 +266,28 @@ function initMap() {
                         window.routeSteps = response.routes[0].legs[0].steps;
                         window.currentStepIndex = 0;
                         updateNavigationDisplay();
+                        
+                        // Apply navigation zoom immediately after route is set
+                        console.log("Applying navigation zoom to current location");
+                        window.map.setCenter(window.currentLocation);
+                        window.map.setZoom(18);
+                        window.map.setTilt(45);
+                        
+                        // Calculate initial heading based on first route step
+                        if (window.routeSteps.length > 0) {
+                            const firstStep = window.routeSteps[0];
+                            const stepStart = {
+                                lat: firstStep.start_location.lat(),
+                                lng: firstStep.start_location.lng()
+                            };
+                            const stepEnd = {
+                                lat: firstStep.end_location.lat(),
+                                lng: firstStep.end_location.lng()
+                            };
+                            window.currentHeading = calculateBearing(stepStart, stepEnd);
+                            updateMarkerIcon(true);
+                        }
+                        
                     } else if (!window.navigationActive) {
                         // Fit bounds only when not in navigation mode
                         const bounds = new google.maps.LatLngBounds();
@@ -222,6 +332,16 @@ function initMap() {
             lat: position.coords.latitude,
             lng: position.coords.longitude
         };
+        
+        // Calculate bearing/heading if we have a previous location
+        if (window.previousLocation) {
+            window.currentHeading = calculateBearing(window.previousLocation, currentPos);
+            // Update arrow rotation
+            window.marker.setIcon(createNavigationArrow(window.currentHeading));
+        }
+        
+        // Store current location as previous for next update
+        window.previousLocation = currentPos;
         
         // Center map on current location during navigation
         window.map.setCenter(currentPos);
@@ -337,58 +457,132 @@ function initMap() {
         }, 5000);
     }
 
-    // Make stopNavigation globally accessible
-    window.stopNavigation = stopNavigation;
+    function showLocationDetectionPopup() {
+        const popup = document.createElement('div');
+        popup.id = 'locationDetectionPopup';
+        popup.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            padding: 25px;
+            z-index: 2000;
+            text-align: center;
+            min-width: 280px;
+            font-family: Arial, sans-serif;
+        `;
+        
+        popup.innerHTML = `
+            <div style="margin-bottom: 15px;">
+                <div style="width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #4285F4; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 15px;"></div>
+                <h3 style="margin: 0 0 10px 0; color: #333;">Karte wird geladen...</h3>
+                <p style="margin: 0; color: #666; font-size: 14px;">Standort wird ermittelt, bitte warten Sie einen Moment.</p>
+            </div>
+        `;
+        
+        // Add CSS animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        document.body.appendChild(popup);
+        
+        // Add overlay
+        const overlay = document.createElement('div');
+        overlay.id = 'locationDetectionOverlay';
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1999;
+        `;
+        document.body.appendChild(overlay);
+    }
+
+    function updateLocationDetectionPopup(message) {
+        const popup = document.getElementById('locationDetectionPopup');
+        if (popup) {
+            const textElement = popup.querySelector('p');
+            if (textElement) {
+                textElement.textContent = message;
+            }
+        }
+    }
+
+    function hideLocationDetectionPopup() {
+        const popup = document.getElementById('locationDetectionPopup');
+        const overlay = document.getElementById('locationDetectionOverlay');
+        
+        if (popup) popup.remove();
+        if (overlay) overlay.remove();
+        
+        window.locationDetected = true;
+    }
 
     function initGeolocation() {
         if (!navigator.geolocation) {
-            showGeolocationError("Geolocation is not supported by your browser.");
+            updateLocationDetectionPopup("Geolocation wird von Ihrem Browser nicht unterstützt.");
+            setTimeout(() => {
+                hideLocationDetectionPopup();
+                showGeolocationError("Geolocation is not supported by your browser.");
+            }, 2000);
             return;
         }
 
-        // Show loading message
-        const loadingMessage = document.createElement('div');
-        loadingMessage.textContent = "Standort wird ermittelt...";
-        loadingMessage.style.cssText = 'position:absolute;top:10px;left:50%;transform:translateX(-50%);background:white;padding:8px 15px;border-radius:5px;z-index:1000;box-shadow:0 2px 5px rgba(0,0,0,0.2);';
-        document.getElementById('map').appendChild(loadingMessage);
+        updateLocationDetectionPopup("GPS-Signal wird gesucht...");
 
-        // Try high accuracy first
+        // Try high accuracy first with longer timeout
         const highAccuracyOptions = {
             enableHighAccuracy: true,
-            timeout: 15000, // 15 seconds
-            maximumAge: 60000 // 1 minute cache
+            timeout: 20000, // 20 seconds
+            maximumAge: 30000 // 30 seconds cache
         };
 
         // Fallback options with lower accuracy
         const fallbackOptions = {
             enableHighAccuracy: false,
-            timeout: 20000, // 20 seconds
+            timeout: 25000, // 25 seconds
             maximumAge: 300000 // 5 minute cache
         };
 
+        console.log("Starting high accuracy geolocation...");
+        
         // Try high accuracy first
         navigator.geolocation.getCurrentPosition(
             position => {
-                loadingMessage.remove();
                 console.log("High accuracy location obtained:", position);
+                hideLocationDetectionPopup();
                 updateCurrentLocation(position);
                 startPositionTracking();
+                showLocationSuccessMessage();
             },
             error => {
                 console.warn("High accuracy failed, trying fallback:", error);
-                loadingMessage.textContent = "Genauere Standortbestimmung fehlgeschlagen, versuche alternative Methode...";
+                updateLocationDetectionPopup("Genauere Ortung fehlgeschlagen, versuche alternative Methode...");
                 
                 // Try fallback method
                 navigator.geolocation.getCurrentPosition(
                     position => {
-                        loadingMessage.remove();
                         console.log("Fallback location obtained:", position);
+                        hideLocationDetectionPopup();
                         updateCurrentLocation(position);
                         startPositionTracking();
+                        showLocationSuccessMessage("Standort mit reduzierter Genauigkeit ermittelt.");
                     },
                     fallbackError => {
-                        loadingMessage.remove();
                         console.error("Both location methods failed:", fallbackError);
+                        hideLocationDetectionPopup();
                         handleGeolocationError(fallbackError);
                     },
                     fallbackOptions
@@ -396,6 +590,16 @@ function initMap() {
             },
             highAccuracyOptions
         );
+    }
+
+    function showLocationSuccessMessage(customMessage = null) {
+        const message = customMessage || "Standort erfolgreich ermittelt!";
+        const successDiv = document.createElement('div');
+        successDiv.textContent = message;
+        successDiv.style.cssText = 'position:absolute;top:10px;left:50%;transform:translateX(-50%);background:#e8f5e8;color:#2e7d32;padding:12px 20px;border-radius:8px;z-index:1000;box-shadow:0 2px 10px rgba(0,0,0,0.2);font-weight:bold;';
+        document.getElementById('map').appendChild(successDiv);
+        
+        setTimeout(() => successDiv.remove(), 3000);
     }
 
     function startPositionTracking() {
@@ -478,6 +682,10 @@ function initMap() {
         // Add event listeners
         document.getElementById('retryLocationBtn').onclick = function() {
             errorDiv.remove();
+            const existingPopup = document.getElementById('locationDetectionPopup');
+            const existingOverlay = document.getElementById('locationDetectionOverlay');
+            if (existingPopup) existingPopup.remove();
+            if (existingOverlay) existingOverlay.remove();
             initGeolocation();
         };
         
@@ -567,6 +775,12 @@ function initMap() {
         window.destinationMarker.setPosition(window.destination);
         window.destinationMarker.setVisible(true);
         
+        // Keep current location marker visible
+        if (window.currentLocation) {
+            window.marker.setPosition(window.currentLocation);
+            window.marker.setVisible(true);
+        }
+        
         if (place.geometry.viewport) {
             window.map.fitBounds(place.geometry.viewport);
         } else {
@@ -598,4 +812,16 @@ function initMap() {
 
         calculateAndDisplayRoute(window.currentLocation, window.destination);
     };
+}; // End of initMap function
+
+// Ensure geolocation watch is cleared on page unload
+window.addEventListener("beforeunload", () => {
+    if (window.watchId) {
+        navigator.geolocation.clearWatch(window.watchId);
+    }
+});
+
+// Ensure initMap is available immediately when the script loads
+if (typeof window.initMap === 'undefined') {
+    console.error('initMap was not defined properly');
 }

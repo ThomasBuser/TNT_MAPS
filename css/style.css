@@ -1,4 +1,7 @@
-/* style.css */
+/* ================================================== */
+/*                  CSS VARIABLES                     */
+/* ================================================== */
+
 :root {
   --red: #793939;
   --green: #2e5033;
@@ -6,6 +9,10 @@
   --black: #000000;
   --white: #ffffff;
 }
+
+/* ================================================== */
+/*                  BASE STYLES                       */
+/* ================================================== */
 
 body {
   margin: 0;
@@ -28,12 +35,67 @@ h1 {
   display: none;
 }
 
+p {
+  text-align: center;
+}
+
+a {
+  color: var(--white);
+  text-decoration: underline;
+}
+
+/* ================================================== */
+/*                  HEADER STYLES                     */
+/* ================================================== */
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  /* Distribute items left and right */
+  align-items: center;
+  /* Vertical center alignment */
+  position: absolute;
+  top: 0;
+  left: 15px;
+  right: 15px;
+  height: 50px;
+  margin: 0;
+  padding: 0 15px;
+  color: var(--black);
+  z-index: 10;
+  box-sizing: border-box;
+
+}
+
+.logo {
+  height: 55px;
+  margin-top: 5px;
+}
+
+/* Logout button styling */
+#logoutBtn {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: auto;
+  text-decoration: underline;
+  color: var(--white);
+  font: inherit;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1.5;
+}
+
+/* ================================================== */
+/*                  FORM STYLES                       */
+/* ================================================== */
+
 form {
   background-color: var(--green);
   padding: 2rem;
   border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  width: 300px;
   display: flex;
   flex-direction: column;
 }
@@ -48,19 +110,30 @@ label {
   margin-bottom: 0.5rem;
 }
 
+/* ================================================== */
+/*                  INPUT STYLES                      */
+/* ================================================== */
+
 input[type="email"],
 input[type="password"],
 input[type="text"] {
-  width: 40vw;
+  width: 15rem;
   padding: 0.5rem;
   border-radius: 20px;
   border: 2px solid var(--yellow);
 }
 
+/* Special search input styling */
+.search-input {
+  width: 70vw !important;
+}
 
+/* ================================================== */
+/*                  BUTTON STYLES                     */
+/* ================================================== */
+
+/* Base button styles */
 button {
-  display: flex; 
-  align-items: center;
   color: var(--black);
   border: none;
   padding: 0.7rem;
@@ -73,142 +146,84 @@ button {
 
 button:hover {
   filter: brightness(0.9);
-  /* makes it 10% darker */
-  transform: translateY(2px);
-  /* slight push down effect */
+  /* Makes button 10% darker on hover */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-  /* smaller shadow for pressed effect */
+  /* Smaller shadow for pressed effect */
 }
 
-/* Utility classes for quick color styling */
-.bg-green {
+/* Button flex utility for centering text */
+.button-flex {
+  display: flex;
+  align-items: center;
+}
+
+/* Yellow place buttons */
+.place-button {
+  background-color: var(--yellow);
+  color: var(--black);
+  border: none;
+  padding: 0.7rem 0;
+  border-radius: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60vw;
+  margin: 1px 0;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Red delete buttons */
+.delete-button {
+  background-color: var(--red);
+  color: var(--white);
+  border: none;
+  padding: 0.7rem;
+  border-radius: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s ease;
+}
+
+/* Green "Add new location" button */
+#placesWrapper>.center-horizontal>button:first-child {
+  background-color: var(--green) !important;
+  color: var(--white) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 25px;
+  padding: 0.7rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#placesWrapper>.center-horizontal>button:first-child:hover {
   background-color: var(--green) !important;
 }
 
-.text-green {
-  color: var(--green) !important;
-}
-
-.bg-green-dark {
-  background-color: var(--green-dark) !important;
-}
-
-.text-green-dark {
-  color: var(--green-dark) !important;
-}
-
-.bg-yellow {
-  background-color: var(--yellow) !important;
-}
-
-.text-yellow {
-  color: var(--yellow) !important;
-}
-
-.bg-red {
-  background-color: var(--red) !important;
-}
-
-.text-red {
-  color: var(--red) !important;
-}
-
-.bg-white {
-  background-color: var(--white) !important;
-}
-
-.text-white {
-  color: var(--white) !important;
-}
-
-.bg-black {
-  background-color: var(--black) !important;
-}
-
-.text-black {
-  color: var(--black) !important;
-}
-
-
-p {
-  text-align: center;
-}
-
-a {
-  color: var(--white);
-  text-decoration: underline;
-}
-
-.register-section {
-  margin-top: 1.5rem;
-  text-align: center;
-}
-
-
-/*Map Styling*/
+/* ================================================== */
+/*                  MAP STYLES                        */
+/* ================================================== */
 
 #map {
-  height: 70vh;
-  /* desktop default */
+  height: 65vh;
   width: 100%;
-}
-
-
-.register-section a {
-  background-color: var(--green);
-  color: var(--white);
-  padding: 0.5rem 1.5rem;
-  border-radius: 20px;
-  text-decoration: none;
-  display: inline-block;
-  margin-top: 0.5rem;
-}
-
-.register-section a:hover {
-  background-color: var(--green);
-}
-
-.contact {
-  margin-top: 1.5rem;
-  color: var(--white);
-  text-align: center;
-  font-size: 0.9rem;
-}
-
-.header-content {
-  display: flex;
-  justify-content: space-between;
-  /* left and right */
-  align-items: center;
-  /* vertical center! */
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 50px;
-  /* or whatever height you want */
-  margin: 0;
-  /* horizontal space, adjust as you like */
-  padding: 0 15px;
-  color: var(--black);
-  z-index: 10;
-  box-sizing: border-box;
-}
-
-.logo {
-  height: 55px;
-  margin-top: 5px;
-  
-}
-
-/* --- ADD.PHP PAGE STYLING --- */
-
-#map {
-  position: fixed;
-  width: 100%;
-  height: 100%;
   z-index: 0;
 }
+
+/* ================================================== */
+/*                  OVERLAY STYLES                    */
+/* ================================================== */
 
 .overlay {
   position: fixed;
@@ -266,114 +281,371 @@ a {
   background-color: var(--yellow);
 }
 
-
-/* Orts-Buttons schmaler und minimaler Abstand */
-.place-button {
-  width: 70vw;
-  max-width: 220px;
-  margin: 0.1px auto;
-  position: static;
-  left: auto;
-  transform: none;
-}
-
-/* Roter Button im selben Stil */
-.delete-button {
-  background-color: var(--red);
-  /* sattes Rot */
-  color: var(--white);
-  border: none;
-  padding: 0.7rem;
-  border-radius: 25px;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: background 0.3s ease;
-}
-
-.delete-button:hover {
-  background-color: var(--red);
-}
-
-/* Grüner Button „Neuen Standort hinzufügen“ mit abgerundeten Ecken */
-#placesWrapper>.center-horizontal>button:first-child {
-  background-color: var(--green) !important;
-  color: var(--white) !important;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 25px;
-  /* abgerundete Ecken */
-  padding: 0.7rem;
-  /* gleiche Polsterung wie roter Button */
-  font-weight: bold;
-  /* gleiche Schriftstärke */
-  cursor: pointer;
-  /* Zeiger-Cursor */
-  transition: background 0.3s ease;
-}
-
-#placesWrapper>.center-horizontal>button:first-child:hover {
-  background-color: var(--green) !important;
-}
-
-.place-button {
-  background-color: var(--yellow);
-  color: var(--black);
-  border: none;
-  padding: 0.7rem 0;
-  border-radius: 25px;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s ease;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  width: 300%;
-  max-width: none;
-  margin: 1px 0;
-
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-
-  text-align: center;
-}
-
-.place-button:hover {
-  background-color: var(--yellow);
-}
+/* ================================================== */
+/*                  PLACES WRAPPER                    */
+/* ================================================== */
 
 #placesWrapper {
-  background-color: var(--white);
+  min-height: 150px;
+  padding-bottom: 70px !important;
+  ;
+  width: 100%;
+  background-color: #ffffff;
   padding: 20px;
+  box-sizing: border-box;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
   margin-top: -5px;
-  /* damit es direkt an die Karte anschliesst */
 }
 
+/* Remove the light gray line */
+#placesWrapper::before {
+  display: none;
+}
 
+/* ================================================== */
+/*                  MODAL STYLES                      */
+/* ================================================== */
+
+/* Modal overlay background */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.modal-overlay.active {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Modal content container */
+.modal-content {
+  background-color: #355e3b;
+  width: 90%;
+  max-width: 500px;
+  overflow-y: auto;
+  color: white;
+}
+
+/* Modal close button */
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+  transition: background-color 0.3s ease;
+}
+
+.modal-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Modal form styling */
+.modal-form {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+  max-width: 500px;
+  padding: 3rem;
+  box-sizing: border-box;
+}
+
+.modal-form h2 {
+  text-align: center;
+  margin: 0 0 2rem 0;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: white;
+  width: 100%;
+}
+
+.modal-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.modal-form label {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: white;
+  text-align: left;
+}
+
+.modal-form input[type="text"] {
+  width: 100%;
+  padding: 1rem 1.2rem;
+  border-radius: 12px;
+  border: none;
+  font-size: 1.2rem;
+  font-weight: 500;
+  box-sizing: border-box;
+}
+
+.modal-form button[type="submit"] {
+  width: 220px;
+  max-width: 90%;
+  padding: 1.2rem;
+  background-color: #ffd700;
+  color: black;
+  font-weight: 700;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  margin-top: 1.5rem;
+}
+
+.modal-form button[type="submit"]:hover {
+  background-color: #e6c200;
+}
+
+/* ================================================== */
+/*                  LAYOUT UTILITIES                  */
+/* ================================================== */
+
+/* Travel control section */
+.reise-steuerung {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 15px;
+  gap: 10px;
+}
+
+.reise-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+/* Horizontal centering utility */
+.center-horizontal {
+  display: flex;
+  justify-content: center;
+}
+
+/* Registration section */
+.register-section {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.register-section a {
+  background-color: var(--green);
+  color: var(--white);
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+.register-section a:hover {
+  background-color: var(--green);
+}
+
+/* Contact section */
+.contact {
+  margin-top: 1.5rem;
+  color: var(--white);
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+/* ================================================== */
+/*                  FOOTER STYLES                     */
+/* ================================================== */
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 20px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--green);
+  color: var(--white);
+  text-align: center;
+  padding: 15px 0;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+.footer-content {
+  position: relative;
+  width: 100%;
+  text-align: center;
+}
+
+footer a {
+  color: var(--yellow);
+  transition: color 0.3s ease;
+}
+
+footer a:hover {
+  color: var(--white);
+  text-decoration: none;
+}
+
+/* ================================================== */
+/*                  UTILITY CLASSES                   */
+/* ================================================== */
+
+/* Width utilities */
+.w-100 {
+  width: 100% !important;
+}
+
+/* Background color utilities */
+.bg-transparent {
+  background-color: transparent !important;
+}
+
+.bg-green {
+  background-color: var(--green) !important;
+}
+
+.bg-green-dark {
+  background-color: var(--green-dark) !important;
+}
+
+.bg-yellow {
+  background-color: var(--yellow) !important;
+}
+
+.bg-red {
+  background-color: var(--red) !important;
+}
+
+.bg-white {
+  background-color: var(--white) !important;
+}
+
+.bg-black {
+  background-color: var(--black) !important;
+}
+
+/* Text color utilities */
+.text-green {
+  color: var(--green) !important;
+}
+
+.text-green-dark {
+  color: var(--green-dark) !important;
+}
+
+.text-yellow {
+  color: var(--yellow) !important;
+}
+
+.text-red {
+  color: var(--red) !important;
+}
+
+.text-white {
+  color: var(--white) !important;
+}
+
+.text-black {
+  color: var(--black) !important;
+}
+
+/* ================================================== */
+/*                  MEDIA QUERIES                     */
+/* ================================================== */
+
+/* Tablet and mobile responsive styles */
 @media (max-width: 768px) {
   .logo {
     height: 40px;
-  
   }
+
   #map {
     height: 70vh !important;
   }
 
   input {
-    width: 70vw !important;
     height: 50px;
+  }
+
+  .search-input {
+    width: 70vw !important;
     border-radius: 50px !important;
   }
 
   button {
     padding: 20px;
     border-radius: 40px;
+  }
+}
 
+/* Mobile-specific modal adjustments */
+@media (max-width: 768px) {
+  .mobile-hidden {
+    display: none;
+  }
+
+  .modal-form {
+    padding: 2rem;
+  }
+
+  .modal-form h2 {
+    font-size: 1.8rem;
+  }
+
+  .modal-form-group {
+    max-width: 100%;
+  }
+
+
+  .footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  #logoutBtn {
+    position: static;
+    padding-top: 0;
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .mobile-logout {
+    width: 100%;
+    text-align: center;
+    order: -1;
   }
 }
