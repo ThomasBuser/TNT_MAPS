@@ -72,13 +72,6 @@ window.initMap = function() {
     window.locationDetected = false;
     window.currentHeading = 0; // Store current heading/bearing
     window.previousLocation = null; // Store previous location for bearing calculation
-    
-    // Store travel times for different modes
-    window.travelTimes = {
-        DRIVING: null,
-        WALKING: null,
-        TRANSIT: null
-    };
 
     // Create navigation panel
     createNavigationPanel();
@@ -91,73 +84,6 @@ window.initMap = function() {
             initGeolocation();
         }, 500);
     });
-
-    // Function to update button text with travel times
-    window.updateButtonTimes = function() {
-        const drivingBtn = document.querySelector('[onclick="setTravelMode(\'DRIVING\')"]');
-        const walkingBtn = document.querySelector('[onclick="setTravelMode(\'WALKING\')"]');
-        const transitBtn = document.querySelector('[onclick="setTravelMode(\'TRANSIT\')"]');
-        
-        if (drivingBtn) {
-            const timeText = window.travelTimes.DRIVING ? `<div style="font-weight: normal; font-size: 9px; text-align: center; margin-top: 2px;">(${window.travelTimes.DRIVING})</div>` : '';
-            drivingBtn.innerHTML = `<div style="display: flex; flex-direction: column; align-items: center;"><div><i class="material-icons">directions_car</i>Auto</div>${timeText}</div>`;
-        }
-        
-        if (walkingBtn) {
-            const timeText = window.travelTimes.WALKING ? `<div style="font-weight: normal; font-size: 9px; text-align: center; margin-top: 2px;">(${window.travelTimes.WALKING})</div>` : '';
-            walkingBtn.innerHTML = `<div style="display: flex; flex-direction: column; align-items: center;"><div><i class="material-icons">directions_walk</i>Laufen</div>${timeText}</div>`;
-        }
-        
-        if (transitBtn) {
-            const timeText = window.travelTimes.TRANSIT ? `<div style="font-weight: normal; font-size: 9px; text-align: center; margin-top: 2px;">(${window.travelTimes.TRANSIT})</div>` : '';
-            transitBtn.innerHTML = `<div style="display: flex; flex-direction: column; align-items: center;"><div><i class="material-icons">directions_bus</i>ÖV</div>${timeText}</div>`;
-        }
-    };
-
-    // Function to calculate travel times for all modes
-    window.calculateAllTravelTimes = function(origin, destination) {
-        if (!origin || !destination) return;
-        
-        const modes = [
-            { mode: google.maps.TravelMode.DRIVING, key: 'DRIVING' },
-            { mode: google.maps.TravelMode.WALKING, key: 'WALKING' },
-            { mode: google.maps.TravelMode.TRANSIT, key: 'TRANSIT' }
-        ];
-        
-        modes.forEach(({ mode, key }) => {
-            const request = {
-                origin: origin,
-                destination: destination,
-                travelMode: mode,
-                unitSystem: google.maps.UnitSystem.METRIC
-            };
-            
-            // Add transit-specific options
-            if (mode === google.maps.TravelMode.TRANSIT) {
-                request.transitOptions = {
-                    departureTime: new Date(),
-                    modes: ['BUS', 'RAIL', 'SUBWAY', 'TRAIN', 'TRAM'],
-                    routingPreference: 'FEWER_TRANSFERS'
-                };
-            }
-            
-            window.directionsService.route(request, function(response, status) {
-                if (status === "OK" && response.routes.length > 0) {
-                    const duration = response.routes[0].legs[0].duration.text;
-                    // Replace "Minuten" with "Min" for shorter display
-                    const shortDuration = duration.replace(/Minuten?/g, 'Min').replace(/Stunden?/g, 'Std');
-                    window.travelTimes[key] = shortDuration;
-                    window.updateButtonTimes();
-                } else {
-                    // Handle case where no route is available (especially for transit)
-                    if (key === 'TRANSIT') {
-                        window.travelTimes[key] = 'n/a';
-                        window.updateButtonTimes();
-                    }
-                }
-            });
-        });
-    };
 
     // Enhanced setTravelMode function with transit support
     window.setTravelMode = function(mode) {
@@ -1252,8 +1178,6 @@ window.initMap = function() {
 
         if (window.currentLocation) {
             calculateAndDisplayRoute(window.currentLocation, place.geometry.location);
-            // Calculate travel times for all modes and update buttons
-            window.calculateAllTravelTimes(window.currentLocation, place.geometry.location);
         } else {
             alert("Current location not available.");
         }
@@ -1275,8 +1199,6 @@ window.initMap = function() {
         window.destinationMarker.setVisible(true);
 
         calculateAndDisplayRoute(window.currentLocation, window.destination);
-        // Calculate travel times for all modes and update buttons
-        window.calculateAllTravelTimes(window.currentLocation, window.destination);
     };
 }; // End of initMap function
 

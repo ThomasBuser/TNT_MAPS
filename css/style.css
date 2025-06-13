@@ -128,6 +128,16 @@ input[type="text"] {
   width: 70vw !important;
 }
 
+#locationSearch::placeholder {
+  color: #0059ff; /* Navigation blue for placeholder */
+  transition: opacity 0.3s ease;
+}
+
+#locationSearch:focus::placeholder {
+  opacity: 0;
+}
+
+
 /* ================================================== */
 /*                  BUTTON STYLES                     */
 /* ================================================== */
@@ -329,7 +339,6 @@ button:hover {
 
 /* Modal content container */
 .modal-content {
-  background-color: #355e3b;
   width: 90%;
   max-width: 500px;
   overflow-y: auto;

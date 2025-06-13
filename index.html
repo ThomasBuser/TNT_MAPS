@@ -25,7 +25,7 @@
 
   <main style="width: 100vw; height: 90vh;">
     <div class="reise-steuerung">
-      <input id="pac-input" class="controls search-input" type="text" placeholder="Wo möchten sie hin">
+      <input id="pac-input" class="controls search-input" type="text" placeholder="📍 Wo möchten Sie hin">
       <div class="reise-buttons">
         <button class="button-flex" onclick="setTravelMode('DRIVING')"><i class="material-icons">directions_car</i>
           Auto</button>
@@ -73,7 +73,9 @@
 
           <div class="modal-form-group">
             <label for="locationSearch">Standort:</label>
-            <input type="text" id="locationSearch" name="location" placeholder="z. B. Restaurant">
+            <div class="input-icon-wrapper">
+              <input type="text" id="locationSearch" name="location" placeholder="📍 Jetztiger Standort">
+            </div>
           </div>
 
           <input type="hidden" id="locationLon" name="lon">
