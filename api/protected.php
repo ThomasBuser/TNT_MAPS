@@ -23,8 +23,8 @@ if (!isset($_SESSION['user_id'])) {
 // Retrieve the user ID from the session
 $user_id = $_SESSION['user_id'];
 
-// SQL query to select the names of places belonging to the logged-in user
-$sql = "SELECT name FROM places WHERE userid = :user_id";
+// SQL query to select the place IDs, names, lat, and lon of places belonging to the logged-in user
+$sql = "SELECT placeid, name, lat, lon FROM places WHERE userid = :user_id";
 
 // Prepare the SQL statement to safely insert the user ID
 $stmt = $pdo->prepare($sql);
@@ -37,21 +37,26 @@ $stmt->execute([
 // Fetch all results of the query as an associative array (key-value pairs)
 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Create an empty array to store the place names
-$names = [];
+// Create an array to store the place data
+$places = [];
 
-// Loop through the fetched results and add the 'name' value to the names array
+// Loop through the fetched results and add placeid, name, lat, and lon
 foreach ($results as $row) {
-    $names[] = $row['name'];
+    $places[] = [
+        'placeid' => $row['placeid'],
+        'name' => $row['name'],
+        'lat' => $row['lat'],
+        'lon' => $row['lon']
+    ];
 }
 
 // Set the response format to JSON
 header('Content-Type: application/json');
 
-// Send a JSON response with success status, email, user ID, and list of place names
+// Send a JSON response with success status, email, user ID, and list of places
 echo json_encode([
     "status" => "success",           // Indicates the request was successful
     "email" => $_SESSION['email'],   // Includes the user's email from the session
     "user_id" => $user_id,           // Includes the user's ID from the session
-    "names" => $names                // Includes the list of place names for the user
+    "names" => $places               // Includes the list of places (id + name) for the user
 ]);

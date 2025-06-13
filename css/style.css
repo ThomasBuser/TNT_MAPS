@@ -1,15 +1,27 @@
 /* style.css */
+:root {
+  --red: #793939;
+  --green: #2e5033;
+  --yellow: #ffd700;
+  --black: #000000;
+  --white: #ffffff;
+}
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background-color: #2e5033 !important;
+  background-color: var(--green) !important;
   background-size: cover;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  color: white;
+  color: var(--white);
+}
+
+main {
+  margin-top: 40px;
 }
 
 h1 {
@@ -17,16 +29,16 @@ h1 {
 }
 
 form {
-  background-color: #355e3b;
+  background-color: var(--green);
   padding: 2rem;
   border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   width: 300px;
   display: flex;
   flex-direction: column;
 }
 
-form > div {
+form>div {
   margin-bottom: 1rem;
 }
 
@@ -39,36 +51,91 @@ label {
 input[type="email"],
 input[type="password"],
 input[type="text"] {
-  width: 100%;
+  width: 40vw;
   padding: 0.5rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  border-radius: 20px;
+  border: 2px solid var(--yellow);
 }
 
+
 button {
-  background-color: #ffd700;
-  color: black;
+  display: flex; 
+  align-items: center;
+  color: var(--black);
   border: none;
   padding: 0.7rem;
   border-radius: 25px;
   font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: background 0.3s ease;
 }
 
 button:hover {
-  background-color: #e6c200;
+  filter: brightness(0.9);
+  /* makes it 10% darker */
+  transform: translateY(2px);
+  /* slight push down effect */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  /* smaller shadow for pressed effect */
 }
+
+/* Utility classes for quick color styling */
+.bg-green {
+  background-color: var(--green) !important;
+}
+
+.text-green {
+  color: var(--green) !important;
+}
+
+.bg-green-dark {
+  background-color: var(--green-dark) !important;
+}
+
+.text-green-dark {
+  color: var(--green-dark) !important;
+}
+
+.bg-yellow {
+  background-color: var(--yellow) !important;
+}
+
+.text-yellow {
+  color: var(--yellow) !important;
+}
+
+.bg-red {
+  background-color: var(--red) !important;
+}
+
+.text-red {
+  color: var(--red) !important;
+}
+
+.bg-white {
+  background-color: var(--white) !important;
+}
+
+.text-white {
+  color: var(--white) !important;
+}
+
+.bg-black {
+  background-color: var(--black) !important;
+}
+
+.text-black {
+  color: var(--black) !important;
+}
+
 
 p {
   text-align: center;
-  margin-top: 2rem;
-  color: #fff;
 }
 
 a {
-  color: #fff;
+  color: var(--white);
   text-decoration: underline;
 }
 
@@ -77,9 +144,19 @@ a {
   text-align: center;
 }
 
+
+/*Map Styling*/
+
+#map {
+  height: 70vh;
+  /* desktop default */
+  width: 100%;
+}
+
+
 .register-section a {
-  background-color: #355e3b;
-  color: white;
+  background-color: var(--green);
+  color: var(--white);
   padding: 0.5rem 1.5rem;
   border-radius: 20px;
   text-decoration: none;
@@ -88,14 +165,40 @@ a {
 }
 
 .register-section a:hover {
-  background-color: #2e5033;
+  background-color: var(--green);
 }
 
 .contact {
   margin-top: 1.5rem;
-  color: white;
+  color: var(--white);
   text-align: center;
   font-size: 0.9rem;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  /* left and right */
+  align-items: center;
+  /* vertical center! */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 50px;
+  /* or whatever height you want */
+  margin: 0;
+  /* horizontal space, adjust as you like */
+  padding: 0 15px;
+  color: var(--black);
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.logo {
+  height: 55px;
+  margin-top: 5px;
+  
 }
 
 /* --- ADD.PHP PAGE STYLING --- */
@@ -118,8 +221,8 @@ a {
   width: 90%;
   max-width: 400px;
   z-index: 1;
-  color: white;
-  box-shadow: 0 0 30px rgba(0,0,0,0.4);
+  color: var(--white);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
 }
 
 .overlay h2 {
@@ -149,24 +252,36 @@ a {
   width: 100%;
   padding: 0.75rem;
   margin-top: 1rem;
-  background-color: #ffd700;
-  color: black;
+  background-color: var(--yellow);
+  color: var(--black);
   font-weight: bold;
   border: none;
   border-radius: 25px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 .overlay button:hover {
-  background-color: #e6c200;
+  background-color: var(--yellow);
+}
+
+
+/* Orts-Buttons schmaler und minimaler Abstand */
+.place-button {
+  width: 70vw;
+  max-width: 220px;
+  margin: 0.1px auto;
+  position: static;
+  left: auto;
+  transform: none;
 }
 
 /* Roter Button im selben Stil */
 .delete-button {
-  background-color: #c0392b; /* sattes Rot */
-  color: white;
+  background-color: var(--red);
+  /* sattes Rot */
+  color: var(--white);
   border: none;
   padding: 0.7rem;
   border-radius: 25px;
@@ -177,28 +292,32 @@ a {
 }
 
 .delete-button:hover {
-  background-color: #a93226;
+  background-color: var(--red);
 }
 
 /* Grüner Button „Neuen Standort hinzufügen“ mit abgerundeten Ecken */
-#placesWrapper > .center-horizontal > button:first-child {
-  background-color: #355e3b !important;
-  color: white !important;
+#placesWrapper>.center-horizontal>button:first-child {
+  background-color: var(--green) !important;
+  color: var(--white) !important;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 25px;          /* abgerundete Ecken */
-  padding: 0.7rem;              /* gleiche Polsterung wie roter Button */
-  font-weight: bold;            /* gleiche Schriftstärke */
-  cursor: pointer;              /* Zeiger-Cursor */
+  border-radius: 25px;
+  /* abgerundete Ecken */
+  padding: 0.7rem;
+  /* gleiche Polsterung wie roter Button */
+  font-weight: bold;
+  /* gleiche Schriftstärke */
+  cursor: pointer;
+  /* Zeiger-Cursor */
   transition: background 0.3s ease;
 }
 
-#placesWrapper > .center-horizontal > button:first-child:hover {
-  background-color: #2e5033 !important;
+#placesWrapper>.center-horizontal>button:first-child:hover {
+  background-color: var(--green) !important;
 }
 
 .place-button {
-  background-color: #ffd700;
-  color: black;
+  background-color: var(--yellow);
+  color: var(--black);
   border: none;
   padding: 0.7rem 0;
   border-radius: 25px;
@@ -223,24 +342,38 @@ a {
 }
 
 .place-button:hover {
-  background-color: #e6c200;
+  background-color: var(--yellow);
 }
 
 #placesWrapper {
-  background-color: white;
+  background-color: var(--white);
   padding: 20px;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
-  box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
-  margin-top: -5px; /* damit es direkt an die Karte anschliesst */
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: -5px;
+  /* damit es direkt an die Karte anschliesst */
 }
 
-/* Reset für inputs mit fehlendem Komma korrigiert */
-input[type="email"],
-input[type="password"],
-input[type="text"] {
-  width: 100%;
-  padding: 0.5rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+
+@media (max-width: 768px) {
+  .logo {
+    height: 40px;
+  
+  }
+  #map {
+    height: 70vh !important;
+  }
+
+  input {
+    width: 70vw !important;
+    height: 50px;
+    border-radius: 50px !important;
+  }
+
+  button {
+    padding: 20px;
+    border-radius: 40px;
+
+  }
 }

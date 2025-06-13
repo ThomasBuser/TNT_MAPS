@@ -29,8 +29,6 @@ h3 {
 /* Paragraphs */
 p {
   font-size: 1rem;
-  line-height: 1.6;
-  margin-bottom: 1rem;
 }
 
 /* Links - No additional styling */
@@ -40,15 +38,25 @@ a {
   
 }
 
+/*hidden elements */
+.hidden {
+  display: none;
+}
+
+.desktop-hidden {
+  display: none;
+}
+
+.mobile-hidden {
+  display: block;
+}
 /* Buttons */
 button {
   padding: 0.5rem 1rem;
   font-size: 1rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 20px;
   cursor: pointer;
-  background-color: #e6c200;
-  color: black;
 }
 
 /* Inputs */
@@ -117,6 +125,7 @@ input {
 
 /* Responsive for Mobile */
 @media (max-width: 768px) {
+
   .grid-2-row,
   .grid-3-row {
     grid-template-rows: 1fr;
@@ -125,5 +134,12 @@ input {
   .grid-2-col,
   .grid-3-col {
     grid-template-columns: 1fr;
+  }
+
+  .desktop-hidden {
+    display: none;
+  }
+  .mobile-hidden {
+    display: block;
   }
 }
