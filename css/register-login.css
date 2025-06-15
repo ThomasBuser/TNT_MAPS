@@ -61,7 +61,7 @@ footer p:nth-child(2) {
     
     .logo{
         margin: 0 auto 10px auto;
-        height: 40px !important;
+        height: 50px !important;
         border: 2px solid var(--yellow) !important;
         border-radius: 10px !important;
     }
