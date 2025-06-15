@@ -1,52 +1,57 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <title>Register</title>
-    <link rel="stylesheet" href="../css/style.css">
-     <link rel="stylesheet" href="../css/var.css">
-    <link rel="stylesheet" href="../css/template.css">
-    <link rel="stylesheet" href="../css/register-login.css">
-    <link rel="icon" type="image/png" href="../assets/img/favicon.ico">
-  </head>
-  <body>
-    <header>
-      <div class="header-content">
-        <img class="logo mobile-hidden" src="../assets/img/logo_tnt.webp" alt="TNT Logo">
-        <div class="center-verical text-white" id="protectedContent" style="text-align: left;"></div>
-      </div>
-    </header>
-    <main>
-      <h1>Register</h1>
-      <form id="registerForm">
-         <img class="logo desktop-hidden" src="../assets/img/logo_tnt.webp" alt="TNT Logo">
-        <div>
-          <label>Name</label>
-          <input type="text" id="lastname" required>
-        </div>
-        <div>
-          <label>Email</label>
-          <input type="email" id="email" required>
-        </div>
-        <div>
-          <label>Passwort</label>
-          <input type="password" id="password" required>
-        </div>
-        <div>
-          <label>Passwort wiederholen</label>
-          <input type="password" id="confirmPassword" required>
-        </div>
-        <div class="center-horizontal"><button type="submit">Register</button></div>
-      </form>
-      <p style="padding-bottom: 15px;">Haben Sie schon einen Account? <a href="../login/">Hier Einloggen</a>.</p>
-    </main>
-    <footer>
-      <div class="footer-content">
-        <p class="text-white">Falls Sie Hilfe benötigen beim Registrieren: <a href="tel:+41791234567" class="text-white">+41 79 123 45 67</a></p>
-        <p class="text-white" style="margin: 0;">© 2025 TNT Maps. Alle Rechte vorbehalten.</p>
-      </div>
-    </footer>
+<html lang="de">
 
-    <script src="../js/register.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/template.css">
+  <link rel="stylesheet" href="../css/register-login.css">
+  <link rel="stylesheet" href="../css/var.css">
+  <link rel="icon" type="image/png" href="../assets/img/favicon.ico">
+</head>
+
+<body>
+  <header>
+    <div class="header-content">
+      <img class="logo mobile-hidden" src="../assets/img/logo_tnt.webp" alt="TNT Logo">
+      <div class="center-verical text-white" id="protectedContent" style="text-align: left;"></div>
+    </div>
+  </header>
+  <main>
+    <h1>Register</h1>
+    <form id="registerForm">
+      <img class="logo desktop-hidden" src="../assets/img/logo_tnt.webp" alt="TNT Logo">
+      <div>
+        <label>Name</label>
+        <input type="text" id="lastname" required>
+      </div>
+      <div>
+        <label>Email</label>
+        <input type="email" id="email" required>
+      </div>
+      <div>
+        <label>Passwort</label>
+        <input type="password" id="password" required>
+      </div>
+      <div>
+        <label>Passwort wiederholen</label>
+        <input type="password" id="confirmPassword" required>
+      </div>
+      <div class="center-horizontal"><button type="submit">Register</button></div>
+    </form>
+    <p style="padding-bottom: 15px;">Haben Sie schon einen Account? <a href="../login/">Hier Einloggen</a>.</p>
+  </main>
+  <footer>
+    <div class="footer-content">
+      <p class="text-white">Falls Sie Hilfe benötigen beim Registrieren: <a href="tel:+41791234567"
+          class="text-white"  style="white-space:nowrap">+41 79 123 45 67</a></p>
+      <p class="text-white" style="margin: 0;">© 2025 TNT Maps. Alle Rechte vorbehalten.</p>
+    </div>
+  </footer>
+
+  <script src="../js/register.js"></script>
+</body>
+
 </html>

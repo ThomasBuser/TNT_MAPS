@@ -46,7 +46,7 @@ footer{
     margin-top: auto;
     margin-bottom: 0px;
     position: relative !important;
-    max-height: 40px;
+    max-height: 50px;
 }
 
 footer p:nth-child(1) {
