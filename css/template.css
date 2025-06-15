@@ -75,6 +75,13 @@ input {
   display: flex;
   justify-content: center;
 }
+.center-horizontal-vertical-full-viewport {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .center-horizontal-vertical {
   display: flex;
   justify-content: center;
@@ -132,6 +139,8 @@ input {
   .grid-3-col {
     grid-template-columns: 1fr;
   }
-
+.desktop-hidden {
+  display: block;
+}
 
 }

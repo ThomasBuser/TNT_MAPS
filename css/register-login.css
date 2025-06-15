@@ -39,4 +39,35 @@ button {
 
 input[type="email"], input[type="password"], input[type="text"] {
     width: 100% !important;
+    border: 2px solid var(--yellow)!important;
+}
+
+footer{
+    margin-top: auto;
+    margin-bottom: 0px;
+    position: relative !important;
+    max-height: 40px;
+}
+
+footer p:nth-child(1) {
+    margin-top: -15px;
+    margin-bottom: -15px;
+}
+footer p:nth-child(2) {
+    font-size: 9px;
+}
+/* Mobile responsiveness */
+@media screen and (max-width: 768px) {
+    
+    .logo{
+        margin: 0 auto 10px auto;
+        height: 40px !important;
+        border: 2px solid var(--yellow) !important;
+        border-radius: 10px !important;
+    }
+    input{ max-height: 40px !important;
+     }
+
+     footer p:nth-child(2) {
+    margin-top: -5px !important;}
 }

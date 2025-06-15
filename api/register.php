@@ -1,5 +1,7 @@
 <?php
 // register.php
+ini_set('session.cookie_httponly', 1);
+// ini_set('session.cookie_secure', 1); // if using HTTPS
 session_start();
 header('Content-Type: application/json');
 
@@ -34,8 +36,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ':lastname' => $lastname
     ]);
 
-    
+    // Get the newly created user's ID
+    $newUserId = $pdo->lastInsertId();
+
+    // Automatically log in the user after successful registration
+    session_regenerate_id(true);
+    $_SESSION['user_id'] = $newUserId;
+    $_SESSION['email']   = $email;
+
     echo json_encode(["status" => "success"]);
 } else {
     echo json_encode(["status" => "error", "message" => "Invalid request method"]);
 }
+?>

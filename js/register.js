@@ -25,8 +25,7 @@ document
       //console.log(result);
 
       if (result.status === "success") {
-        alert("Registration successful! You can now log in.");
-        window.location.href = "../login";
+        window.location.href = "../";
       } else {
         alert(result.message || "Registration failed.");
       }

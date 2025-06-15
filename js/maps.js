@@ -1,3 +1,6 @@
+// Clear all local and session storage on page load to avoid caching issues
+sessionStorage.clear();
+localStorage.clear();
 // Define initMap in the global scope immediately
 window.initMap = function() {
     // Reset key location/navigation state on each map initialization
@@ -992,6 +995,28 @@ window.initMap = function() {
         window.locationDetected = true;
     }
 
+    // Third fallback: Get location via IP-based lookup if all else fails
+    function getLocationByIP(callback, errorCallback) {
+        // Free API: Note there are rate limits if you call this often!
+        fetch('https://ipapi.co/json/')
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.latitude && data.longitude) {
+                    callback({
+                        coords: {
+                            latitude: data.latitude,
+                            longitude: data.longitude
+                        }
+                    });
+                } else {
+                    errorCallback("IP location failed");
+                }
+            })
+            .catch(err => {
+                errorCallback(err);
+            });
+    }
+
     function initGeolocation() {
         if (!navigator.geolocation) {
             updateLocationDetectionPopup("Geolocation wird von Ihrem Browser nicht unterstützt.");
@@ -1044,8 +1069,20 @@ window.initMap = function() {
                     },
                     fallbackError => {
                         console.error("Both location methods failed:", fallbackError);
-                        hideLocationDetectionPopup();
-                        handleGeolocationError(fallbackError);
+                        updateLocationDetectionPopup("Letzter Versuch: Standort wird per IP-Adresse geschätzt ...");
+                        // New: Third fallback – IP-based location
+                        getLocationByIP(
+                            position => {
+                                hideLocationDetectionPopup();
+                                updateCurrentLocation(position);
+                                showLocationSuccessMessage("Ungefährer Standort per IP ermittelt.");
+                                // Optional: do not start tracking, as IP is not accurate!
+                            },
+                            ipError => {
+                                hideLocationDetectionPopup();
+                                handleGeolocationError(fallbackError); // Call original error handler
+                            }
+                        );
                     },
                     fallbackOptions
                 );
@@ -1110,7 +1147,11 @@ window.initMap = function() {
                 break;
             case error.POSITION_UNAVAILABLE:
                 errorMessage = "Standortinformationen sind nicht verfügbar.";
-                troubleshootingTips = "Mögliche Lösungen: 1) Überprüfen Sie Ihre Internetverbindung 2) Gehen Sie nach draußen für besseren GPS-Empfang 3) Stellen Sie sicher, dass Standortdienste auf Ihrem Gerät aktiviert sind 4) Versuchen Sie es in einem anderen Browser";
+                troubleshootingTips = "Das kann nach häufigem Neuladen der Seite passieren. Bitte warten Sie ein paar Sekunden und versuchen Sie es erneut.";
+                // Auto-retry after 3 seconds
+                setTimeout(() => {
+                    initGeolocation();
+                }, 3000);
                 break;
             case error.TIMEOUT:
                 errorMessage = "Zeitüberschreitung bei der Standortbestimmung.";

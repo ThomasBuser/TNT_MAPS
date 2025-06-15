@@ -74,6 +74,8 @@ function openAddLocationModal() {
    .then(result => {
      alert(result);
      closeAddLocationModal();
+     sessionStorage.clear();
+     localStorage.clear();
      window.location.reload();
    })
    .catch(error => {
